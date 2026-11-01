@@ -1,0 +1,262 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * TINY TRACE DESIGN SYSTEM
+ * ------------------------
+ * Earthy-but-bright palette: forest green, butter yellow, warm coral,
+ * warm cream, soft sky. All colors are oklch tokens; never hardcode
+ * colors in components.
+ */
+
+@theme inline {
+  --radius-sm: var(--tt-radius-sm);
+  --radius-md: var(--tt-radius-md);
+  --radius-lg: var(--tt-radius-lg);
+  --radius-xl: var(--tt-radius-xl);
+  --radius-2xl: var(--tt-radius-2xl);
+  --radius-3xl: var(--tt-radius-3xl);
+  --radius-4xl: calc(var(--tt-radius-3xl) + 12px);
+
+  --font-display: "Baloo 2", "Trebuchet MS", sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand tokens */
+  --color-forest: var(--tt-forest);
+  --color-forest-deep: var(--tt-forest-deep);
+  --color-forest-soft: var(--tt-forest-soft);
+  --color-yellow: var(--tt-yellow);
+  --color-yellow-deep: var(--tt-yellow-deep);
+  --color-coral: var(--tt-coral);
+  --color-coral-soft: var(--tt-coral-soft);
+  --color-cream: var(--tt-cream);
+  --color-cream-deep: var(--tt-cream-deep);
+  --color-sky: var(--tt-sky);
+  --color-sky-deep: var(--tt-sky-deep);
+  --color-bark: var(--tt-bark);
+  --color-text: var(--tt-text);
+  --color-text-soft: var(--tt-text-soft);
+
+  --color-chart-1: var(--tt-forest);
+  --color-chart-2: var(--tt-sky-deep);
+  --color-chart-3: var(--tt-coral);
+  --color-chart-4: var(--tt-yellow-deep);
+  --color-chart-5: var(--tt-bark);
+
+  --animate-trace-dash: trace-dash 2.4s linear infinite;
+  --animate-cub-breathe: cub-breathe 3.6s ease-in-out infinite;
+  --animate-pop-in: pop-in var(--tt-dur-slow) var(--tt-ease-pop) both;
+  --animate-rise-in: rise-in var(--tt-dur-slow) var(--tt-ease-out) both;
+  --animate-pulse-dot: pulse-dot 1.5s ease-out infinite;
+  --animate-sway: sway 6s ease-in-out infinite;
+}
+
+:root {
+  /* palette */
+  --tt-forest: oklch(0.52 0.115 152);
+  --tt-forest-deep: oklch(0.34 0.075 155);
+  --tt-forest-soft: oklch(0.87 0.055 148);
+  --tt-yellow: oklch(0.9 0.13 92);
+  --tt-yellow-deep: oklch(0.81 0.15 82);
+  --tt-coral: oklch(0.69 0.17 33);
+  --tt-coral-soft: oklch(0.9 0.07 40);
+  --tt-cream: oklch(0.975 0.018 88);
+  --tt-cream-deep: oklch(0.94 0.028 86);
+  --tt-sky: oklch(0.88 0.055 225);
+  --tt-sky-deep: oklch(0.66 0.1 232);
+  --tt-bark: oklch(0.52 0.055 62);
+  --tt-text: oklch(0.26 0.033 155);
+  --tt-text-soft: oklch(0.48 0.026 155);
+
+  /* radii */
+  --tt-radius-sm: 8px;
+  --tt-radius-md: 12px;
+  --tt-radius-lg: 18px;
+  --tt-radius-xl: 24px;
+  --tt-radius-2xl: 32px;
+  --tt-radius-3xl: 44px;
+  --radius: var(--tt-radius-lg);
+
+  /* motion */
+  --tt-dur-fast: 140ms;
+  --tt-dur-mid: 260ms;
+  --tt-dur-slow: 480ms;
+  --tt-ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --tt-ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* shadcn surface mapping */
+  --background: var(--tt-cream);
+  --foreground: var(--tt-text);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--tt-text);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--tt-text);
+  --primary: var(--tt-forest);
+  --primary-foreground: oklch(0.99 0.01 90);
+  --secondary: var(--tt-yellow);
+  --secondary-foreground: var(--tt-text);
+  --muted: var(--tt-cream-deep);
+  --muted-foreground: var(--tt-text-soft);
+  --accent: var(--tt-coral);
+  --accent-foreground: oklch(0.99 0.01 90);
+  --destructive: oklch(0.58 0.2 27);
+  --destructive-foreground: oklch(0.99 0.01 90);
+  --border: oklch(0.89 0.025 90);
+  --input: oklch(0.89 0.025 90);
+  --ring: var(--tt-forest);
+}
+
+@keyframes trace-dash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+@keyframes cub-breathe {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.4deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(0.6deg);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulse-dot {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@utility trace-underline {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--tt-yellow);
+  }
+}
+
+/* Warm paper texture built from tokens, no decorative blobs. */
+@utility paper {
+  background-color: var(--tt-cream);
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in oklab, var(--tt-bark) 14%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 22px 22px;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-weight: 600;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--tt-yellow);
+    color: var(--tt-text);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Toggled by the in-app accessibility setting. */
+.tt-reduced-motion *,
+.tt-reduced-motion *::before,
+.tt-reduced-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
