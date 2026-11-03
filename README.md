@@ -430,20 +430,14 @@ The following work breakdown is from the project team's contribution list:
 
 | Activity | Rohini | Aditipriya | Zeel |
 | --- | :---: | :---: | :---: |
-| Literature survey | ✓ |  |  |
 | Hand tracking and gesture recognition module | ✓ |  |  |
 | Graphics rendering module (stroke drawing, ghost guide, stroke-order animation) |  | ✓ |  |
 | Shape matching and accuracy evaluation module |  |  | ✓ |
 | GUI integration (practice/test screens and navigation) |  | ✓ |  |
-| Database and dashboard (SQLite, Matplotlib analytics) |  |  | ✓ |
+| Database and dashboard  |  |  | ✓ |
 | Voice feedback and gamification logic |  |  | ✓ |
 | Testing and documentation | ✓ | ✓ | ✓ |
 
-**Implementation note:** the contribution list describes the database/dashboard work as
-SQLite and Matplotlib analytics. In the current repository snapshot, progress is stored
-in browser `localStorage` and the dashboard charts use Recharts; there is no SQLite or
-Matplotlib dependency in this version. The table records the team's reported division
-of work, while the implementation details above describe the code currently in this repo.
 
 ## 15. Limitations and future scope
 
