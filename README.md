@@ -426,28 +426,24 @@ completed-lesson counts, high scores and streaks.
 
 ## 14. Team contributions
 
-The Git history included with this repository identifies these contributors and supports
-the following summary. It does not establish a complete list of everyone on the original
-academic team, so additional team members and their verified work should be added by the
-team before using this as a formal contribution statement. No contribution percentages
-are inferred.
+The following work breakdown is from the project team's contribution list:
 
-| Contributor | Work supported by the repository history | Main project areas |
-| --- | --- | --- |
-| **Aditipriya** | The original Tiny Trace application snapshot is recorded under this author in the source-project commit. That snapshot contains the initial app foundation and implementation; the commit does not break the work down by individual module. | App routes and UI, curriculum and stroke templates, canvas and ghost guides, camera/MediaPipe providers, geometry scoring, progress state and services. |
-| **Zeel Shah** | Prepared and maintained this repository, expanded the project documentation, and made follow-up implementation and deployment-readiness changes. The recorded follow-up changes include lesson demo/tracing flow, spoken guidance and results, stroke-template and coordinate/scoring refinements, and removal of the stale Bun lockfile that blocked Cloudflare dependency installation. | `README.md`, `HANDOFF.md`, `src/routes/lesson.$lessonId.tsx`, `src/routes/result.tsx`, `src/data/strokes.ts`, `src/lib/geometry.ts`, `src/services/`, `src/vision/`, package/deployment setup. |
+| Activity | Rohini | Aditipriya | Zeel |
+| --- | :---: | :---: | :---: |
+| Literature survey | ✓ |  |  |
+| Hand tracking and gesture recognition module | ✓ |  |  |
+| Graphics rendering module (stroke drawing, ghost guide, stroke-order animation) |  | ✓ |  |
+| Shape matching and accuracy evaluation module |  |  | ✓ |
+| GUI integration (practice/test screens and navigation) |  | ✓ |  |
+| Database and dashboard (SQLite, Matplotlib analytics) |  |  | ✓ |
+| Voice feedback and gamification logic |  |  | ✓ |
+| Testing and documentation | ✓ | ✓ | ✓ |
 
-The repository maps responsibilities to code areas as follows; this is a module guide,
-not a claim that every listed area was implemented by one person:
-
-| Code area | Responsibility |
-| --- | --- |
-| `src/vision/` | Camera lifecycle, MediaPipe landmark integration, pinch gesture logic and demo provider |
-| `src/lib/geometry.ts`, `src/lib/drawing-surface.ts` | Coordinate pipeline, resampling, smoothing and scoring |
-| `src/data/` | Curriculum, 53 glyph/word templates, animals and badges |
-| `src/components/air-writing/`, `src/components/graphics/` | Canvas renderer, ghost guide and animation layers |
-| `src/routes/`, `src/components/` | Screens, navigation, lesson flow, results and parent dashboard |
-| `src/state/`, `src/services/` | Progress persistence, unlocking, analytics and voice guidance |
+**Implementation note:** the contribution list describes the database/dashboard work as
+SQLite and Matplotlib analytics. In the current repository snapshot, progress is stored
+in browser `localStorage` and the dashboard charts use Recharts; there is no SQLite or
+Matplotlib dependency in this version. The table records the team's reported division
+of work, while the implementation details above describe the code currently in this repo.
 
 ## 15. Limitations and future scope
 
