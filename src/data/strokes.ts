@@ -204,8 +204,11 @@ export const LETTER_GLYPHS: Record<string, StrokeTemplate> = {
     stroke(line(0.32, 0.48, 0.66, 0.48), "middle shelf"),
   ]),
   G: template("G", [
-    stroke(arc(0.52, 0.5, 0.28, 0.36, 45, 315), "curve around, leaving a gap on the right"),
-    stroke(line(0.52, 0.5, 0.8, 0.5), "across to the right"),
+    // Begin at the upper-right opening, curve over the top and around the
+    // left and bottom, then finish at the lower-right. This leaves the
+    // characteristic opening on the right side of an uppercase G.
+    stroke(arc(0.52, 0.5, 0.28, 0.36, -45, -315), "start at the top-right, curve around the left and bottom"),
+    stroke(line(0.52, 0.5, 0.8, 0.5), "draw the short bar across to the right"),
   ]),
   H: template("H", [
     stroke(line(0.28, 0.14, 0.28, 0.86), "down"),
