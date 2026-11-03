@@ -42,6 +42,23 @@ export function poly(...pts: [number, number][]): Point[] {
   return out;
 }
 
+function cubicBezier(
+  start: [number, number],
+  control1: [number, number],
+  control2: [number, number],
+  end: [number, number],
+  n = 24,
+): Point[] {
+  return Array.from({ length: n }, (_, i) => {
+    const t = i / (n - 1);
+    const u = 1 - t;
+    return {
+      x: u ** 3 * start[0] + 3 * u ** 2 * t * control1[0] + 3 * u * t ** 2 * control2[0] + t ** 3 * end[0],
+      y: u ** 3 * start[1] + 3 * u ** 2 * t * control1[1] + 3 * u * t ** 2 * control2[1] + t ** 3 * end[1],
+    };
+  });
+}
+
 export function stroke(points: Point[], direction?: string): Stroke {
   return { id: nextId("s"), points, direction };
 }
@@ -86,14 +103,26 @@ export const SHAPE_GLYPHS: Record<string, StrokeTemplate> = {
   oval: template("oval", [stroke(arc(0.5, 0.5, 0.36, 0.26, -90, 270), "a stretched circle")]),
   star: template("star", [
     stroke(
-      poly([0.5, 0.14], [0.65, 0.55], [0.9, 0.55], [0.7, 0.75], [0.78, 0.9]),
+      poly([0.5, 0.14], [0.62, 0.43], [0.9, 0.46], [0.68, 0.63], [0.78, 0.9]),
       "point to point",
     ),
-    stroke(poly([0.78, 0.9], [0.5, 0.72], [0.22, 0.9], [0.3, 0.75], [0.1, 0.55], [0.35, 0.55], [0.5, 0.14])),
+    stroke(poly([0.78, 0.9], [0.5, 0.72], [0.22, 0.9], [0.32, 0.63], [0.1, 0.46], [0.38, 0.43], [0.5, 0.14])),
   ]),
   heart: template("heart", [
-    stroke([...arc(0.35, 0.36, 0.18, 0.18, 160, -20), ...line(0.53, 0.36, 0.5, 0.86, 8)], "left hump then down"),
-    stroke([...arc(0.65, 0.36, 0.18, 0.18, -160, 20).reverse(), ...line(0.47, 0.36, 0.5, 0.86, 8)]),
+    stroke(
+      [
+        ...cubicBezier([0.5, 0.34], [0.34, 0.12], [0.13, 0.22], [0.17, 0.44]),
+        ...cubicBezier([0.17, 0.44], [0.19, 0.63], [0.38, 0.78], [0.5, 0.86]).slice(1),
+      ],
+      "left hump down to the point",
+    ),
+    stroke(
+      [
+        ...cubicBezier([0.5, 0.34], [0.66, 0.12], [0.87, 0.22], [0.83, 0.44]),
+        ...cubicBezier([0.83, 0.44], [0.81, 0.63], [0.62, 0.78], [0.5, 0.86]).slice(1),
+      ],
+      "right hump down to the point",
+    ),
   ]),
 };
 
@@ -102,34 +131,42 @@ export const SHAPE_GLYPHS: Record<string, StrokeTemplate> = {
 export const NUMBER_GLYPHS: Record<string, StrokeTemplate> = {
   "0": template("0", [stroke(arc(0.5, 0.5, 0.24, 0.36, -90, 270), "around like an egg")]),
   "1": template("1", [
-    stroke(line(0.36, 0.28, 0.52, 0.14), "little flag first"),
-    stroke(line(0.52, 0.14, 0.52, 0.86), "straight down"),
+    stroke(line(0.38, 0.34, 0.52, 0.22), "little flag first"),
+    stroke(line(0.52, 0.22, 0.52, 0.78), "straight down"),
   ]),
   "2": template("2", [
-    stroke([...arc(0.5, 0.32, 0.22, 0.2, 190, 20), ...line(0.7, 0.42, 0.28, 0.84, 10)], "curve then slide down"),
+    stroke([...arc(0.5, 0.32, 0.22, 0.2, 180, 360), ...line(0.72, 0.32, 0.28, 0.84, 10)], "curve over the top, then slide down"),
     stroke(line(0.28, 0.84, 0.74, 0.84), "across the bottom"),
   ]),
   "3": template("3", [
-    stroke(arc(0.48, 0.32, 0.22, 0.19, 190, 90), "top curve"),
-    stroke(arc(0.48, 0.68, 0.24, 0.2, -90, 110), "bottom curve"),
+    stroke(
+      [
+        ...cubicBezier([0.3, 0.18], [0.78, 0.08], [0.78, 0.48], [0.5, 0.5]),
+        ...cubicBezier([0.5, 0.5], [0.78, 0.52], [0.78, 0.9], [0.3, 0.8]).slice(1),
+      ],
+      "curve around the top, then around the bottom",
+    ),
   ]),
   "4": template("4", [
     stroke(poly([0.62, 0.14], [0.26, 0.62], [0.78, 0.62]), "down and across"),
     stroke(line(0.62, 0.32, 0.62, 0.88), "long line down"),
   ]),
   "5": template("5", [
-    stroke(poly([0.72, 0.16], [0.34, 0.16], [0.32, 0.46]), "across then down"),
-    stroke(arc(0.5, 0.63, 0.22, 0.23, -110, 120), "big belly curve"),
+    stroke(poly([0.72, 0.16], [0.34, 0.16], [0.32, 0.5]), "across then down"),
+    stroke(arc(0.5, 0.63, 0.22, 0.23, -145, 120), "big belly curve"),
   ]),
   "6": template("6", [
-    stroke([...arc(0.52, 0.4, 0.22, 0.26, -20, -140), ...arc(0.5, 0.66, 0.22, 0.22, 180, 540, 28)], "slide down and loop"),
+    stroke(
+      [...cubicBezier([0.7, 0.16], [0.38, 0.22], [0.26, 0.46], [0.3, 0.68]), ...arc(0.5, 0.68, 0.2, 0.2, 180, 540).slice(1)],
+      "curve down and loop around",
+    ),
   ]),
   "7": template("7", [
     stroke(line(0.24, 0.16, 0.78, 0.16), "across the top"),
     stroke(line(0.78, 0.16, 0.4, 0.86), "slide down"),
   ]),
   "8": template("8", [
-    stroke([...arc(0.5, 0.32, 0.19, 0.18, -90, 270), ...arc(0.5, 0.68, 0.22, 0.2, 90, -270)], "two loops"),
+    stroke([...arc(0.5, 0.32, 0.19, 0.18, 90, 450), ...arc(0.5, 0.68, 0.22, 0.2, -90, 270)], "loop around the top, then around the bottom"),
   ]),
   "9": template("9", [
     stroke(arc(0.52, 0.34, 0.2, 0.2, -90, 270), "circle on top"),
@@ -150,7 +187,7 @@ export const LETTER_GLYPHS: Record<string, StrokeTemplate> = {
     stroke(arc(0.3, 0.32, 0.26, 0.18, -90, 90), "top bump"),
     stroke(arc(0.3, 0.68, 0.29, 0.18, -90, 90), "bottom bump"),
   ]),
-  C: template("C", [stroke(arc(0.52, 0.5, 0.28, 0.36, -55, 235), "curve like a moon")]),
+  C: template("C", [stroke(arc(0.52, 0.5, 0.28, 0.36, -55, -305), "curve like a moon")]),
   D: template("D", [
     stroke(line(0.3, 0.14, 0.3, 0.86), "down the wall"),
     stroke(arc(0.3, 0.5, 0.34, 0.36, -90, 90), "big belly"),
@@ -167,8 +204,8 @@ export const LETTER_GLYPHS: Record<string, StrokeTemplate> = {
     stroke(line(0.32, 0.48, 0.66, 0.48), "middle shelf"),
   ]),
   G: template("G", [
-    stroke(arc(0.52, 0.5, 0.28, 0.36, -55, 250), "curve around"),
-    stroke(line(0.68, 0.5, 0.68, 0.66), "little hook"),
+    stroke(arc(0.52, 0.5, 0.28, 0.36, 45, 315), "curve around, leaving a gap on the right"),
+    stroke(line(0.52, 0.5, 0.8, 0.5), "across to the right"),
   ]),
   H: template("H", [
     stroke(line(0.28, 0.14, 0.28, 0.86), "down"),
@@ -210,7 +247,7 @@ export const LETTER_GLYPHS: Record<string, StrokeTemplate> = {
   ]),
   Q: template("Q", [
     stroke(arc(0.5, 0.48, 0.28, 0.34, -90, 270), "around"),
-    stroke(line(0.62, 0.68, 0.8, 0.9), "little tail"),
+    stroke(line(0.7, 0.72, 0.86, 0.9), "little tail"),
   ]),
   R: template("R", [
     stroke(line(0.32, 0.14, 0.32, 0.86), "down"),
@@ -218,7 +255,13 @@ export const LETTER_GLYPHS: Record<string, StrokeTemplate> = {
     stroke(line(0.34, 0.52, 0.74, 0.86), "kick out"),
   ]),
   S: template("S", [
-    stroke([...arc(0.5, 0.32, 0.2, 0.18, 20, 200), ...arc(0.5, 0.68, 0.2, 0.18, -160, 20)], "wiggle like a snake"),
+    stroke(
+      [
+        ...cubicBezier([0.72, 0.2], [0.3, 0.06], [0.25, 0.48], [0.5, 0.5]),
+        ...cubicBezier([0.5, 0.5], [0.75, 0.52], [0.75, 0.94], [0.28, 0.8]).slice(1),
+      ],
+      "curve left, then sweep right and back left",
+    ),
   ]),
   T: template("T", [
     stroke(line(0.26, 0.14, 0.74, 0.14), "across the top"),
@@ -264,9 +307,13 @@ export function wordTemplate(word: string): StrokeTemplate {
   letters.forEach((ch, i) => {
     const glyph = LETTER_GLYPHS[ch];
     if (!glyph) return;
+    const letterScaleX = w * 1.3;
+    const letterScaleY = Math.min(0.86, 1.5 / letters.length);
+    const letterOffsetX = i * w + (w - letterScaleX) / 2;
+    const letterOffsetY = (1 - letterScaleY) / 2;
     glyph.strokes.forEach((s) => {
-      const scaled = scaleStroke(s, w * 0.92, 0.86);
-      strokes.push({ ...translateStroke(scaled, i * w + w * 0.04, 0.07), id: `${word}-${i}-${s.id}` });
+      const scaled = scaleStroke(s, letterScaleX, letterScaleY);
+      strokes.push({ ...translateStroke(scaled, letterOffsetX, letterOffsetY), id: `${word}-${i}-${s.id}` });
     });
   });
   return { character: word.toUpperCase(), strokes };

@@ -380,12 +380,16 @@ function projectToSurface(video: HTMLVideoElement, point: HandLandmark): Point {
   const frameHeight = video.videoHeight;
   const innerWidth = width - DRAWING_SURFACE_PADDING * 2;
   const innerHeight = height - DRAWING_SURFACE_PADDING * 2;
+  const drawingSide = Math.min(innerWidth, innerHeight);
+  const insetX = (innerWidth - drawingSide) / 2;
+  const insetY = (innerHeight - drawingSide) / 2;
 
   if (
     width <= 0 ||
     height <= 0 ||
     innerWidth <= 0 ||
     innerHeight <= 0 ||
+    drawingSide <= 0 ||
     frameWidth <= 0 ||
     frameHeight <= 0
   ) {
@@ -400,8 +404,8 @@ function projectToSurface(video: HTMLVideoElement, point: HandLandmark): Point {
   const screenY = (height - renderedHeight) / 2 + point.y * renderedHeight;
 
   return {
-    x: clamp01((screenX - DRAWING_SURFACE_PADDING) / innerWidth),
-    y: clamp01((screenY - DRAWING_SURFACE_PADDING) / innerHeight),
+    x: clamp01((screenX - DRAWING_SURFACE_PADDING - insetX) / drawingSide),
+    y: clamp01((screenY - DRAWING_SURFACE_PADDING - insetY) / drawingSide),
   };
 }
 

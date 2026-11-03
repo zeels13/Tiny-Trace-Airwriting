@@ -1,10 +1,11 @@
 # Tiny Trace — Handoff
 
-**Status:** Code complete and submission-ready. The only outstanding work is a manual,
-hardware-dependent verification pass before presenting the project.
+**Status:** Project snapshot prepared for handoff. A manual, hardware-dependent
+verification pass is still needed before presenting the project.
 
-**Build state:** `npx tsc --noEmit` passes; `npm run build` passes; all 53 lesson routes
-and every main page returned HTTP 200 in a dev-server smoke test.
+**Build state:** The earlier project baseline passed `npx tsc --noEmit`, `npm run build`,
+and a dev-server route smoke test. Recent lesson, geometry and template edits have not yet
+been rechecked.
 
 ## Before the demo
 
@@ -25,7 +26,8 @@ a small demo profile (60 XP, two completed lessons, two-day streak).
 - [ ] Left/right movement is not reversed; fingertip, ink and ghost guide line up.
 - [ ] Multiple strokes are stored separately.
 - [ ] Moving the hand out of frame ends the stroke, hides the pointer and commits no stale ink.
-- [ ] **Use demo mode** replays the character and scores the attempt.
+- [ ] **Use demo mode** replays the character, clears the simulated marks and returns to
+  the live tracing prompt; demo playback is not scored as the child's attempt.
 - [ ] Score, stars, XP and the "areas to revisit" tip look correct.
 - [ ] Finish / I'm done / Start over / Try again all behave correctly.
 - [ ] Empty attempts cannot be finished.

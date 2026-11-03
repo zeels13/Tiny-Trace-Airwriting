@@ -26,9 +26,14 @@ export function normalizePoint(p: Point, source: Size, mirrored = true): Point {
 
 /** normalized 0..1 -> canvas pixels, with optional uniform padding. */
 export function transformPoint(p: Point, target: Size, padding = 0): Point {
+  // Keep normalized geometry isotropic. Mapping x and y to different scales
+  // turns circles into ovals and makes the visible guide disagree with scores.
+  const innerWidth = Math.max(0, target.width - padding * 2);
+  const innerHeight = Math.max(0, target.height - padding * 2);
+  const scale = Math.min(innerWidth, innerHeight);
   return {
-    x: padding + p.x * (target.width - padding * 2),
-    y: padding + p.y * (target.height - padding * 2),
+    x: (target.width - scale) / 2 + p.x * scale,
+    y: (target.height - scale) / 2 + p.y * scale,
     timestamp: p.timestamp,
   };
 }

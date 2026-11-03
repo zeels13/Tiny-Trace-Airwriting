@@ -63,6 +63,7 @@ function LessonScreen() {
   const finishRef = useRef<() => void>(() => {});
   /** Guards against scoring the same attempt twice (double tap / demo end). */
   const finishingRef = useRef(false);
+  const announcedStrokeCountRef = useRef(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const totalStrokes = lesson.template.strokes.length;
@@ -78,8 +79,21 @@ function LessonScreen() {
         kind: mode === "demo" ? "mock" : "mediapipe",
         strokes: lesson.template.strokes,
         wobble: 0.4,
+        samplesPerStroke: 72,
+        interval: 50,
         onStrokeEnd: (index) => setCompletedStrokes(index + 1),
-        onFinished: () => finishRef.current(),
+        onFinished: () => {
+          if (mode === "demo") {
+            // The scripted replay is a teaching preview, never a scored attempt.
+            drawnRef.current = [];
+            setCompletedStrokes(0);
+            setResetSignal((n) => n + 1);
+            setPhase("watch");
+            setMode("camera");
+            return;
+          }
+          finishRef.current();
+        },
       }),
     [lesson, mode],
   );
@@ -98,7 +112,6 @@ function LessonScreen() {
     const accuracy = evaluateTemplate(lesson.template, drawnRef.current);
     const seconds = Math.max(8, Math.round((performance.now() - startedAtRef.current) / 1000));
     setPhase("scoring");
-    voiceService.speak(accuracy.overall >= 70 ? VOICE_LINES.greatJob : VOICE_LINES.tryAgain);
     const result = completeLesson(lesson.id, accuracy, seconds);
     window.setTimeout(() => {
       navigate({ to: result.unlockedWorldId || result.unlockedAnimalId ? "/result" : "/result" });
@@ -108,6 +121,19 @@ function LessonScreen() {
   useEffect(() => {
     finishRef.current = finish;
   }, [finish]);
+
+  useEffect(() => {
+    if (phase !== "tracing" || mode !== "camera" || completedStrokes <= announcedStrokeCountRef.current) return;
+    announcedStrokeCountRef.current = completedStrokes;
+    if (completedStrokes >= totalStrokes) {
+      voiceService.speak(VOICE_LINES.allLinesComplete);
+      return;
+    }
+    const nextStroke = lesson.template.strokes[completedStrokes];
+    voiceService.speak(
+      VOICE_LINES.lineComplete(completedStrokes, nextStroke?.direction ?? "follow the next line"),
+    );
+  }, [completedStrokes, lesson, mode, phase, totalStrokes]);
 
   // Stable across re-renders so the canvas never re-subscribes or clears.
   // Stroke progress comes from what the child actually drew, for both modes.
@@ -120,15 +146,16 @@ function LessonScreen() {
     finishingRef.current = false;
     drawnRef.current = [];
     setCompletedStrokes(0);
+    announcedStrokeCountRef.current = 0;
     setResetSignal((n) => n + 1);
     setPhase("tracing");
     startedAtRef.current = performance.now();
     // Camera permission is requested here — an explicit user action — and
     // never during render or on page load.
     await provider.startCamera(videoRef.current);
-    voiceService.speak(VOICE_LINES.startPoint);
+    voiceService.speak(VOICE_LINES.startPoint(lesson.template.strokes[0]?.direction));
     if (hasScriptedPlayback(provider)) provider.play();
-  }, [provider]);
+  }, [lesson, provider]);
 
   const retry = useCallback(() => {
     finishingRef.current = false;
@@ -219,7 +246,9 @@ function LessonScreen() {
               <div className="absolute inset-0 grid place-items-center bg-forest-deep/70 px-6 text-center">
                 <div>
                   <LionMascot pose="teaching" className="mx-auto h-32 w-32" />
-                  <p className="mt-3 font-display text-3xl text-cream">Watch, then trace!</p>
+                  <p className="mt-3 font-display text-3xl text-cream">
+                    {mode === "demo" ? "Watch, then trace!" : "Let’s trace!"}
+                  </p>
                   <p className="mx-auto mt-2 max-w-sm text-cream/80">{lesson.hint}</p>
                   <TTButton size="lg" variant="sun" className="mt-6" onClick={start}>
                     <Play className="h-6 w-6" aria-hidden="true" />

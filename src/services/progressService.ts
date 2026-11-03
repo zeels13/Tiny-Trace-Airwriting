@@ -94,7 +94,9 @@ export function isLessonUnlocked(progress: Progress, lessonId: string): boolean 
   if (!isWorldUnlocked(progress, lesson.worldId)) return false;
   if (lesson.order === 1) return true;
   const prev = LESSONS.find((l) => l.worldId === lesson.worldId && l.order === lesson.order - 1);
-  return !prev || Boolean(progress.lessons[prev.id]);
+  if (!prev) return true;
+  const previousProgress = progress.lessons[prev.id];
+  return Boolean(previousProgress);
 }
 
 export function nextLessonId(progress: Progress): string {

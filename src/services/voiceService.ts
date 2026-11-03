@@ -55,9 +55,10 @@ export const voiceService = new VoiceGuideService();
 
 export const VOICE_LINES = {
   lessonStart: (character: string) => `Let's write ${character}.`,
-  startPoint: "Start at the glowing dot.",
+  startPoint: (direction = "follow the trail") => `Start at the glowing dot, then ${direction}.`,
   followTrail: "Follow the trail.",
-  greatJob: "Great job!",
-  tryAgain: "Try that stroke again.",
-  nextStroke: (n: number) => `Now stroke ${n}.`,
+  lineComplete: (n: number, nextDirection: string) =>
+    `Great, line ${n} is done. Now start at the glowing dot and ${nextDirection}.`,
+  allLinesComplete: "You finished every line. Tap I'm done to see your accuracy.",
+  result: (accuracy: number, message: string) => `Your accuracy is ${accuracy} percent. ${message}`,
 };

@@ -87,7 +87,8 @@ geometry, not a neural network.
 | Geometric accuracy evaluation | Resampling, symmetric polyline distance, tangent agreement, endpoint distance, jitter comparison, completion and overshoot gates. |
 | Score, stars, XP and gamification | Percentage score, 0–5 stars, lesson XP, levels every 150 XP, badges, streak tracking and animal friends. |
 | Lesson progression and persistence | Lessons and worlds unlock in order; progress, attempts and settings survive refresh via `localStorage`. |
-| Mock/demo mode | An explicitly labelled simulator replays the lesson's own strokes with human-like wobble when no camera is available or for demonstration. |
+| Voice guidance | Spoken cues explain where to start, when to move to the next line, and the accuracy result with score-appropriate encouragement. |
+| Mock/demo mode | An explicitly labelled simulator replays the lesson's own strokes with human-like wobble when no camera is available or for demonstration; demo playback is not scored as the child's attempt. |
 | Parent dashboard | Accuracy trend, practice minutes, characters learned, completion, weak areas and recent attempts, computed locally. |
 | Settings and accessibility | Sound/voice toggles, reduced-motion mode, child name, reset progress and parent dashboard link. |
 
@@ -384,6 +385,8 @@ The weighted result is then multiplied by:
   scores 0, so incomplete work is always penalised.
 - **Stroke order**: up to a 12 % reduction when matched strokes are drawn in the wrong
   order.
+- Shape lessons unlock in order after the child completes an attempt; there is no minimum
+  accuracy threshold to continue.
 - **Extra strokes**: −6 per substantial unmatched stroke, capped at −15.
 - Accidental dots shorter than 0.025 normalized units are ignored.
 

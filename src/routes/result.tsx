@@ -8,6 +8,7 @@ import { XPAnimation } from "@/components/progress/XPAnimation";
 import { TTButton, ttButton } from "@/components/ui-tt/TTButton";
 import type { AccuracyResult } from "@/lib/types";
 import { lessonService } from "@/services/lessonService";
+import { VOICE_LINES, voiceService } from "@/services/voiceService";
 import { useAppState } from "@/state/app-state";
 
 export const Route = createFileRoute("/result")({
@@ -30,10 +31,16 @@ function ResultScreen() {
     if (!lastResult) navigate({ to: "/home" });
   }, [lastResult, navigate]);
 
+  useEffect(() => {
+    if (!lastResult) return;
+    voiceService.cancel();
+    voiceService.speak(VOICE_LINES.result(lastResult.accuracy.overall, resultPraise(lastResult.accuracy.overall)));
+  }, [lastResult]);
+
   if (!lastResult) return null;
 
   const lesson = lessonService.getLesson(lastResult.lessonId);
-  const good = lastResult.accuracy.overall >= 70;
+  const good = lastResult.accuracy.overall >= 74;
   const next = lesson ? lessonService.nextInWorld(lesson) ?? lessonService.firstOfNextWorld(lesson) : undefined;
   const hasUnlock = Boolean(lastResult.unlockedWorldId || lastResult.unlockedAnimalId || lastResult.newBadges.length);
 
@@ -50,9 +57,7 @@ function ResultScreen() {
           {good ? "YOU DID IT!" : "ALMOST THERE!"}
         </h1>
         <p className="mt-4 text-xl text-text-soft">
-          {good
-            ? "Your trail was amazing — smooth and steady."
-            : "That trail was tricky. Let's try it one more time together."}
+          {resultPraise(lastResult.accuracy.overall)} Your accuracy is {lastResult.accuracy.overall}%.
         </p>
 
         {!good && (
@@ -105,6 +110,14 @@ function ResultScreen() {
       </div>
     </main>
   );
+}
+
+function resultPraise(accuracy: number): string {
+  if (accuracy >= 95) return "Incredible tracing! You followed the trail beautifully.";
+  if (accuracy >= 86) return "Fantastic work! Your lines were careful and steady.";
+  if (accuracy >= 74) return "Great effort! You stayed close to the trail.";
+  if (accuracy >= 60) return "Nice trying! Keep practicing those lines and you’ll get even closer.";
+  return "Good try! Let’s follow the guide slowly and give it another go.";
 }
 
 /** Points at the weakest scored skill, so "try again" is actionable. */
