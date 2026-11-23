@@ -435,9 +435,9 @@ The following work breakdown is from the project team's contribution list:
 | Literature Survey | ✓ | ✓ |  |
 | Hand Tracking and Gesture Recognition Module | ✓ | ✓ |  |
 | Graphics Rendering Module | ✓ | ✓ |  |
-| Shape Matching and Accuracy Evaluation | ✓ | ✓ |  |
+| Shape Matching and Accuracy Evaluation |  | ✓ | ✓ |
 | GUI Interface | ✓ | ✓ |  |
-| Voice Feedback | ✓ | ✓ |  |
+| Voice Feedback |  | ✓ | ✓ |
 | Testing and Documentation | ✓ | ✓ | ✓ |
 
 
